@@ -2,12 +2,12 @@ name: PR Comment
 
 on:
   pull_request_target:
-    branches:
-      - main
+    paths:
+      - '**/*' 
 
 jobs:
   comment:
-    if: github.repository == "ci-test-react"
+    if: github.repository == 'Bananamilk452/ci-test-react'
     runs-on: ubuntu-latest
     permissions: read-all
     env:
@@ -25,9 +25,10 @@ jobs:
         run: |
           # Use the GitHub API to get the list of changed files
           # documentation: https://docs.github.com/rest/commits/commits#compare-two-commits
-          DIFF_DOCUMENTS=$(gh api repos/{owner}/{repo}/compare/${{ env.BASE_SHA }}...${{ env.HEAD_SHA }} \
-            --jq '.files | .[] | select(.status|IN("added", "modified", "renamed", "copied", "changed")) | .filename')
+          DIFF_DOCUMENTS=$(git diff --name-only ${{ env.BASE_SHA }}...${{ env.HEAD_SHA }})
           echo "files=${DIFF_DOCUMENTS}" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment on PR with changed files
         uses: actions/github-script@v7
