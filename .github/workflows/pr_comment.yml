@@ -17,6 +17,8 @@ jobs:
         id: changes
         run: |
           echo "Changed files: "
+          echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+          echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})" >> $GITHUB_OUTPUT
           echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
 
       - name: Comment on PR with changed files
