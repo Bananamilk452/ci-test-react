@@ -46,7 +46,7 @@ jobs:
               <summary>Changed files (${files.split('\n').length})</summary>
               <br />
               
-              ${files.split('\n').map((f) => `- \`[${f}](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/${process.env.HEAD_SHA}/${f})\``).join('\n')}
+              ${files.split('\n').map((f) => `- [${f}](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/${process.env.HEAD_SHA}/${f})`).join('\n')}
               
               </details>`,
             });
