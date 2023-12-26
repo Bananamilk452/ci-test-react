@@ -9,7 +9,6 @@ jobs:
   comment:
     if: github.repository == 'Bananamilk452/ci-test-react'
     runs-on: ubuntu-latest
-    permissions: read-all
     env:
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
