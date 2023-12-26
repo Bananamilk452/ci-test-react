@@ -18,6 +18,7 @@ jobs:
       - name: Checkout repository
         with:
           ref: "${{ env.HEAD_SHA }}"
+          fetch-depth: 0
         uses: actions/checkout@v2
 
       - name: Identify changed files
