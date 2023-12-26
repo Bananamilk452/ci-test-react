@@ -1,23 +1,33 @@
 name: PR Comment
 
 on:
-  pull_request:
-    paths:
-      - '**/*'  # 모든 변경사항을 감지
+  pull_request_target:
+    branches:
+      - main
 
 jobs:
   comment:
+    if: github.repository == "ci-test-react"
     runs-on: ubuntu-latest
+    permissions: read-all
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
     steps:
       - name: Checkout repository
+        with:
+          ref: "${{ env.HEAD_SHA }}"
         uses: actions/checkout@v2
 
       - name: Identify changed files
         id: changes
         run: |
-          echo "Changed files: "
-          echo "files=$(git diff --name-only ${{ github.event.pull_request.base.sha }})" >> $GITHUB_OUTPUT
+          # Use the GitHub API to get the list of changed files
+          # documentation: https://docs.github.com/rest/commits/commits#compare-two-commits
+          DIFF_DOCUMENTS=$(gh api repos/{owner}/{repo}/compare/${{ env.BASE_SHA }}...${{ env.HEAD_SHA }} \
+            --jq '.files | .[] | select(.status|IN("added", "modified", "renamed", "copied", "changed")) | .filename')
+          echo "files=${DIFF_DOCUMENTS}" >> $GITHUB_OUTPUT
 
       - name: Comment on PR with changed files
         uses: actions/github-script@v7
