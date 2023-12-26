@@ -41,7 +41,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `<details><summary>Changed files (${files.split('\n').length})</summary>${files.split('\n').join('\n')}</details>`,
+              body: `<details><summary>Changed files (${files.split('\n').length})</summary>${files.split('\n').join('\n').map((f) => `- [f](https://github.com/${content.repo.owner}/${content.repo.repo}/${process.env.HEAD_SHA}/${f})`)}</details>`,
             });
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
