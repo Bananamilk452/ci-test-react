@@ -1,0 +1,36 @@
+name: PR Comment
+
+on:
+  pull_request:
+    paths:
+      - '**/*'  # 모든 변경사항을 감지
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Identify changed files
+        id: changes
+        run: |
+          echo "Changed files: "
+          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+
+      - name: Comment on PR with changed files
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const files = `${{ steps.changes.outputs.files }}`;
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+
+            octokit.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Changed files:\n${files}`,
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
