@@ -1,0 +1,23 @@
+name: deploy - development (dispatch)
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - name: Git Fetch / Pull / Docker Build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_SSH_HOST }}
+          username: ${{ secrets.REMOTE_SSH_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          passphrase: ${{ secrets.REMOTE_SSH_PASSPHRASE }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          REF: ${{ github.ref_name }}
+          script: |
+            cd hapaus
+            git fetch
+            git reset --hard
+            git checkout $REF
+            git pull
