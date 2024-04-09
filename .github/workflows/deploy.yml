@@ -9,6 +9,6 @@ jobs:
       - name: Git Fetch / Pull / Docker Build
         with:
           REF: ${{ github.ref_name }}
-          run: |
-            echo $REF
-            echo ${{ github.ref_name }}
+        run: |
+          echo $REF
+          echo ${{ github.ref_name }}
